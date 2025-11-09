@@ -1,7 +1,8 @@
 // frontend/static/script.js
-// FINAL VERSION: Includes language switcher fixes, weather API, and all translations.
+// FINAL CORRECTED: single translations block, single langLabel
+// Includes 9 languages, language switcher fixes, and backend TTS.
 
-// ----------------- Translations -----------------
+/* ===================== TRANSLATIONS (merged) ===================== */
 const translations = {
   en: {
     title: "AgriSmart AI", navDetect: "Disease Detection", navSoil: "Soil Analysis", navCrop: "Crop Recommendation", navIrrigation: "Irrigation", navAssistant: "Assistant", 
@@ -19,7 +20,8 @@ const translations = {
     adviceBtn: "Get Advice", irrigationAdviceTitle: "Irrigation Advice", noAdvice: "No advice yet",
     assistantTitle: "AI Assistant", assistantWelcome: "Hi 👋. Detect a disease or ask a question about soil, irrigation, or fertilizers.", 
     chatPlaceholder: "Ask about treatment, dosage, or fertilizers...", sendBtn: "Send", 
-    footer: "© AgriSmart AI — Built for farmers"
+    footer: "© AgriSmart AI — Built for farmers",
+    soilResultsTitle: "Soil Analysis Results", noAnalysis: "No analysis yet"
   },
   hi: {
     title: "एग्रीस्मार्ट एआई", navDetect: "रोग पहचान", navSoil: "मृदा विश्लेषण", navCrop: "फसल सिफारिश", navIrrigation: "सिंचाई", navAssistant: "सहायक",
@@ -37,7 +39,84 @@ const translations = {
     adviceBtn: "सलाह लें", irrigationAdviceTitle: "सिंचाई सलाह", noAdvice: "अभी तक कोई सलाह नहीं",
     assistantTitle: "एआई सहायक", assistantWelcome: "नमस्ते 👋। किसी बीमारी का पता लगाएं या मिट्टी, सिंचाई, या उर्वरकों के बारे में कोई प्रश्न पूछें।",
     chatPlaceholder: "उपचार, खुराक, या उर्वरकों के बारे में पूछें...", sendBtn: "भेजें",
-    footer: "© एग्रीस्मार्ट एआई — किसानों के लिए बनाया गया"
+    footer: "© एग्रीस्मार्ट एआई — किसानों के लिए बनाया गया",
+    soilResultsTitle: "मृदा विश्लेषण परिणाम", noAnalysis: "अभी तक कोई विश्लेषण नहीं"
+  },
+  mr: {
+    title: "अ‍ॅग्रीस्मार्ट एआय", navDetect: "रोग ओळख", navSoil: "माती विश्लेषण", navCrop: "पीक शिफारस", navIrrigation: "सिंचन", navAssistant: "सहायक",
+    heroTitle: "एआय सह डाळिंबाचे रोग ओळखा", heroSubtitle: "फोटो अपलोड करा किंवा कॅमेरा वापरा. त्वरित निदान, उपचार आणि प्रतिबंधात्मक उपाय आणि व्हॉइस मार्गदर्शन मिळवा.",
+    uploadBtn: "फोटो अपलोड करा", cameraBtn: "कॅमेरा उघडा", detectBtn: "रोग ओळखा", resetBtn: "रीसेट करा",
+    resultsCardTitle: "विश्लेषण परिणाम", noImage: "अद्याप फोटो नाही", treatment: "उपचार", uploadToSee: "शिफारसी मिळवण्यासाठी फोटो अपलोड करा", prevention: "प्रतिबंध",
+    askBtn: "सहायकाला विचारा", playBtn: "ऐका",
+    soilCardTitle: "माती आरोग्य विश्लेषण", phLabel: "pH पातळी", phTooltip: "pH < 6 : आम्लयुक्त. 6–7.5 : इष्टतम. > 8 : अल्कधर्मी.",
+    nLabel: "नायट्रोजन (ppm)", pLabel: "फॉस्फरस (ppm)", kLabel: "पोटॅशियम (ppm)", analyzeBtn: "मातीचे विश्लेषण करा",
+    cropCardTitle: "पीक शिफारस", cropCardSubtitle: "पीक शिफारस मिळवण्यासाठी पर्यावरणीय डेटा प्रविष्ट करा.", recommendBtn: "शिफारस करा",
+    irrigationTitle: "सिंचन नियोजक", irrigationSubtitle: "सध्याच्या परिस्थितीवर आधारित पाणी देण्याचा सल्ला मिळवा.",
+    moistureLabel: "मातीची आर्द्रता (%)", liveWeatherTitle: "थेट हवामान", fetchWeatherBtn: "डेटा आणा",
+    noWeather: "'डेटा आणा' वर क्लिक करा", rainLabelShort: "अंदाजित पाऊस (मिमी)", rainLabel: "पाऊस (मिमी)",
+    tempLabel: "तापमान (°C)", humidityLabel: "आर्द्रता (%)",
+    adviceBtn: "सिंचन सल्ला मिळवा", irrigationAdviceTitle: "सिंचन सल्ला", noAdvice: "अद्याप सल्ला तयार केलेला नाही.",
+    assistantTitle: "एआई शेती सहायक", assistantWelcome: "नमस्कार 👋. मी तुमचा अ‍ॅग्रीस्मार्ट सहायक आहे. प्रथम रोग ओळखा, किंवा मला डाळिंब शेतीबद्दल काहीही विचारा!",
+    chatPlaceholder: "प्रश्न विचारा...", sendBtn: "पाठवा",
+    footer: "© 2025 अ‍ॅग्रीस्मार्ट एआय — सर्व हक्क राखीव.",
+    soilResultsTitle: "माती विश्लेषण परिणाम", noAnalysis: "अद्याप विश्लेषण नाही"
+  },
+  gu: {
+    title: "એગ્રીસ્માર્ટ AI", navDetect: "રોગ ઓળખ", navSoil: "જમીન વિશ્લેષણ", navCrop: "પાક ભલામણ", navIrrigation: "સિંચાઈ", navAssistant: "સહાયક",
+    heroTitle: "AI વડે દાડમના רોગो શોધો", heroSubtitle: "ફોટો અપલોડ કરો અથવા કેમેરાનો ઉપયોગ કરો. ત્વરિત નિદાન, સારવાર અને નિવારણ ટિપ્સ અને વૉઇસ માર્ગદર્શન મેળવો.",
+    uploadBtn: "ફોટો અપલોડ કરો", cameraBtn: "કેમેરો ખોલો", detectBtn: "રોગ શોધો", resetBtn: "રીસેટ કરો",
+    resultsCardTitle: "વિશ્લેષણ પરિણામો", noImage: "હજુ સુધી કોઈ ફોટો નથી", treatment: "સારવાર", uploadToSee: "ભલામણો મેળવવા માટે ફોટો અપલોડ કરો", prevention: "નિવારણ",
+    askBtn: "સહાયકને પૂછો", playBtn: "સાંભળો",
+    soilCardTitle: "જમીન આરોગ્ય વિશ્લેષણ", phLabel: "pH સ્તર", phTooltip: "pH < 6 : એસિડિક. 6–7.5 : શ્રેષ્ઠ. > 8 : આલ્કલાઇન.",
+    nLabel: "નાઇટ્રોજન (ppm)", pLabel: "ફોસ્ફરસ (ppm)", kLabel: "પોટેશિયમ (ppm)", analyzeBtn: "જમીનનું વિશ્લેષણ કરો",
+    cropCardTitle: "પાક ભલામણ", cropCardSubtitle: "પાક ભલામણ મેળવવા માટે પર્યાવરણીય ડેટા દાખલ કરો.", recommendBtn: "ભલામણ કરો",
+    irrigationTitle: "સિંચાઈ આયોજક", irrigationSubtitle: "વર્તમાન પરિસ્થિતિઓના આધારે પાણી આપવાની સલાહ મેળવો.",
+    moistureLabel: "જમીનની ભેજ (%)", liveWeatherTitle: "જીવંત હવામાન", fetchWeatherBtn: "ડેટા મેળવો",
+    noWeather: "'ડેટા મેળવો' પર ક્લિક કરો", rainLabelShort: "આગાહી વરસાદ (મિમી)", rainLabel: "વરસાદ (મિમી)",
+    tempLabel: "તાપમાન (°C)", humidityLabel: "ભેજ (%)",
+    adviceBtn: "સિંચાઈ સલાહ મેળવો", irrigationAdviceTitle: "સિંચાઈ સલાહ", noAdvice: "હજુ સુધી કોઈ સલાહ નથી.",
+    assistantTitle: "AI ખેતી સહાયક", assistantWelcome: "નમસ્તે 👋. હું તમારો એગ્રીસમાર્ટ સહાયક છું. પ્રથમ રોગ શોધો, અથવા મને દાડમની ખેતી વિશે કંઈપણ પૂછો!",
+    chatPlaceholder: "પ્રશ્ન પૂછો...", sendBtn: "મોકલો",
+    footer: "© 2025 એગ્રીસ્માર્ટ AI — સર્વાધિકાર સુરક્ષિત.",
+    soilResultsTitle: "જમીન વિશ્લેષણ પરિણામો", noAnalysis: "હજુ સુધી કોઈ વિશ્લેષણ નથી"
+  },
+  pa: {
+    title: "ਐਗਰੀਸਮਾਰਟ ਏਆਈ", navDetect: "ਬਿਮਾਰੀ ਦੀ ਪਛਾਣ", navSoil: "ਮਿੱਟੀ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ", navCrop: "ਫਸਲ ਦੀ ਸਿਫਾਰਸ਼", navIrrigation: "ਸਿੰਚਾਈ", navAssistant: "ਸਹਾਇਕ",
+    heroTitle: "ਏਆਈ ਨਾਲ ਅਨਾਰ ਦੇ ਰੋਗਾਂ ਦਾ ਪਤਾ ਲਗਾਓ", heroSubtitle: "ਇੱਕ ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ ਜਾਂ ਆਪਣੇ ਕੈਮਰੇ ਦੀ ਵਰਤੋਂ ਕਰੋ। ਤੁਰੰਤ ਨਿਦਾਨ, ਇਲਾਜ ਅਤੇ ਰੋਕਥਾਮ ਦੇ ਸੁਝਾਅ ਅਤੇ ਆਵਾਜ਼ ਮਾਰਗਦਰਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰੋ।",
+    uploadBtn: "ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ", cameraBtn: "ਕੈਮਰਾ ਖੋਲ੍ਹੋ", detectBtn: "ਬਿਮਾਰੀ ਦਾ ਪਤਾ ਲਗਾਓ", resetBtn: "ਰੀਸੈਟ ਕਰੋ",
+    resultsCardTitle: "ਵਿਸ਼ਲੇਸ਼ਣ ਦੇ ਨਤੀਜੇ", noImage: "ਅਜੇ ਕੋਈ ਤਸਵੀਰ ਨਹੀਂ", treatment: "ਇਲਾਜ", uploadToSee: "ਸਿਫਾਰਸ਼ਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਇੱਕ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ", prevention: "ਰੋਕਥਾਮ",
+    askBtn: "ਸਹਾਇਕ ਨੂੰ ਪੁੱਛੋ", playBtn: "ਸੁਣੋ",
+    soilCardTitle: "ਮਿੱਟੀ ਦੀ ਸਿਹਤ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ", phLabel: "pH ਪੱਧਰ", phTooltip: "pH < 6 : ਤੇਜ਼ਾਬੀ। 6–7.5 : ਅਨੁਕੂਲ। > 8 : ਖਾਰੀ।",
+    nLabel: "ਨਾਈਟ੍ਰੋਜਨ (ppm)", pLabel: "ਫਾਸਫੋਰਸ (ppm)", kLabel: "ਪੋਟਾਸ਼ੀਅਮ (ppm)", analyzeBtn: "ਮਿੱਟੀ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰੋ",
+    cropCardTitle: "ਫਸਲ ਦੀ ਸਿਫਾਰਸ਼", cropCardSubtitle: "ਫਸਲ ਦੀ ਸਿਫਾਰਸ਼ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਵਾਤਾਵਰਣ ਡੇਟਾ ਦਰਜ ਕਰੋ।", recommendBtn: "ਸਿਫਾਰਸ਼ ਕਰੋ",
+    irrigationTitle: "ਸਿੰਚਾਈ ਯੋਜਨਾਕਾਰ", irrigationSubtitle: "ਮੌਜੂਦਾ ਹਾਲਤਾਂ ਦੇ ਅਧਾਰ 'ਤੇ ਪਾਣੀ ਦੇਣ ਦੀ ਸਲਾਹ ਲਓ।",
+    moistureLabel: "ਮਿੱਟੀ ਦੀ ਨਮੀ (%)", liveWeatherTitle: "ਲਾਈਵ ਮੌਸਮ", fetchWeatherBtn: "ਡੇਟਾ ਪ੍ਰਾਪਤ ਕਰੋ",
+    noWeather: "'ਡੇਟਾ ਪ੍ਰਾਪਤ ਕਰੋ' 'ਤੇ ਕਲਿੱਕ ਕਰੋ", rainLabelShort: "ਅਨੁਮਾਨਿਤ ਮੀਂਹ (ਮਿਮੀ)", rainLabel: "ਮੀਂਹ (ਮਿਮੀ)",
+    tempLabel: "ਤਾપਮਾਨ (°C)", humidityLabel: "ਨਮੀ (%)",
+    adviceBtn: "ਸਿੰਚਾਈ ਸਲਾਹ ਲਓ", irrigationAdviceTitle: "ਸਿੰਚਾਈ ਸਲਾਹ", noAdvice: "ਅਜੇ ਕੋਈ ਸਲਾਹ ਨਹੀਂ ਬਣਾਈ ਗਈ।",
+    assistantTitle: "ਏਆਈ ਖੇਤੀ ਸਹਾਇਕ", assistantWelcome: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ 👋। ਮੈਂ ਤੁਹਾਡਾ ਐਗਰੀਸਮਾਰਟ ਸਹਾਇਕ ਹਾਂ। ਪਹਿਲਾਂ ਬਿਮਾਰੀ ਦਾ ਪਤਾ ਲਗਾਓ, ਜਾਂ ਮੈਨੂੰ ਅਨਾਰ ਦੀ ਖੇਤੀ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ!",
+    chatPlaceholder: "ਸਵਾਲ ਪੁੱਛੋ...", sendBtn: "ਭੇਜੋ",
+    footer: "© 2025 ਐਗਰੀਸਮਾਰਟ ਏਆਈ — ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।",
+    soilResultsTitle: "ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ ਦੇ ਨਤੀਜੇ", noAnalysis: "ਅਜੇ ਕੋਈ ਵਿਸ਼ਲੇਸ਼ਣ ਨਹੀਂ"
+  },
+  bn: {
+    title: "এগ্রিস্মার্ট এআই", navDetect: "রোগ শনাক্তকরণ", navSoil: "মাটি বিশ্লেষণ", navCrop: "ফসলের সুপারিশ", navIrrigation: "সেচ", navAssistant: "সহকারী",
+    heroTitle: "এআই দিয়ে ডালিমের রোগ শনাক্ত করুন", heroSubtitle: "একটি ছবি আপলোড করুন বা আপনার ক্যামেরা ব্যবহার করুন। তাৎক্ষণিক রোগ নির্ণয়, চিকিৎসা ও প্রতিরোধের টিপস এবং ভয়েস নির্দেশিকা পান।",
+    uploadBtn: "ছবি আপলোড করুন", cameraBtn: "ক্যামেরা খুলুন", detectBtn: "রোগ শনাক্ত করুন", resetBtn: "রিসেট করুন",
+    resultsCardTitle: "বিশ্লেষণের ফলাফল", noImage: "এখনও কোন ছবি নেই", treatment: "চিকিৎসা", uploadToSee: "সুপারিশ পেতে একটি ছবি আপলোড করুন", prevention: "প্রতিরোধ",
+    askBtn: "সহকারীকে জিজ্ঞাসা করুন", playBtn: "শুনুন",
+    soilCardTitle: "মাটির স্বাস্থ্য বিশ্লেষণ", phLabel: "pH স্তর", phTooltip: "pH < 6 : অম্লীয়। 6–7.5 : সর্বোত্তম। > 8 : ক্ষারীয়।",
+    nLabel: "নাইট্রোজেন (ppm)", pLabel: "ফসফরাস (ppm)", kLabel: "পটাশিয়াম (ppm)", analyzeBtn: "মাটি বিশ্লেষণ করুন",
+    cropCardTitle: "ফসলের সুপারিশ", cropCardSubtitle: "ফসলের সুপারিশ পেতে পরিবেশগত তথ্য লিখুন।", recommendBtn: "সুপারিশ করুন",
+    irrigationTitle: "সেচ পরিকল্পনাকারী", irrigationSubtitle: "বর্তমান পরিস্থিতির উপর ভিত্তি করে জল দেওয়ার পরামর্শ পান।",
+    moistureLabel: "মাটির আর্দ্রতা (%)", liveWeatherTitle: "লাইভ আবহাওয়া", fetchWeatherBtn: "তথ্য আনুন",
+    noWeather: "'তথ্য আনুন'-এ ক্লিক করুন", rainLabelShort: "পূর্বাভাসিত বৃষ্টি (মিমি)", rainLabel: "বৃষ্টিপাত (মিমি)",
+    tempLabel: "তাপমাত্রা (°C)", humidityLabel: "আর্দ্রতা (%)",
+    adviceBtn: "সেচের পরামর্শ নিন", irrigationAdviceTitle: "সেচের পরামর্শ", noAdvice: "এখনও কোন পরামর্শ তৈরি হয়নি।",
+    assistantTitle: "এআই কৃষি সহকারী", assistantWelcome: "নমস্কার 👋। আমি আপনার এগ্রিস্মার্ট সহকারী। প্রথমে রোগ শনাক্ত করুন, অথবা আমাকে ডালিম চাষ সম্পর্কে যা খুশি জিজ্ঞাসা করুন!",
+    chatPlaceholder: "প্রশ্ন জিজ্ঞাসা করুন...", sendBtn: "পাঠান",
+    footer: "© 2025 এগ্রিস্মার্ট এআই — সর্বস্বত্ব সংরক্ষিত।",
+    soilResultsTitle: "মাটি বিশ্লেষণের ফলাফল", noAnalysis: "এখনও কোন বিশ্লেষণ নেই"
   },
   ta: {
     title: "அக்ரிஸ்மார்ட் AI", navDetect: "நோய் கண்டறிதல்", navSoil: "மண் பகுப்பாய்வு", navCrop: "பயிர் பரிந்துரை", navIrrigation: "நீர்ப்பாசனம்", navAssistant: "உதவியாளர்",
@@ -77,26 +156,29 @@ const translations = {
   },
   kn: {
     title: "ಅಗ್ರಿಸ್ಮಾರ್ಟ್ AI", navDetect: "ರೋಗ ಪತ್ತೆ", navSoil: "ಮಣ್ಣಿನ ವಿಶ್ಲೇಷಣೆ", navCrop: "ಬೆಳೆ ಶಿಫಾರಸು", navIrrigation: "ನೀರಾವರಿ", navAssistant: "ಸಹಾಯಕ",
-    heroTitle: "AI ನೊಂದಿಗೆ ದಾಳಿಂಬೆ ರೋಗಗಳನ್ನು ಪತ್ತೆ ಮಾಡಿ", heroSubtitle: "ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ನಿಮ್ಮ ಕ್ಯಾಮರಾ ಬಳಸಿ. ತ್ವರಿತ ರೋಗನಿರ್ಣಯ, ಚಿಕಿತ್ಸೆ ಮತ್ತು ತಡೆಗಟ್ಟುವಿಕೆ ಸಲಹೆಗಳು ಮತ್ತು ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ.",
-    uploadBtn: "ಚಿತ್ರ ಅಪ್ಲೋಡ್ ಮಾಡಿ", cameraBtn: "ಕ್ಯಾಮೆರಾ ತೆರೆಯಿರಿ", detectBtn: "ರೋಗ ಪತ್ತೆ ಮಾಡಿ", resetBtn: "ಬೇರೆ ಚಿತ್ರ ಅಪ್ಲೋಡ್ ಮಾಡಿ",
-    resultsCardTitle: "ವಿಶ್ಲೇಷಣೆ ಫಲಿತಾಂಶಗಳು", noImage: "ಇನ್ನೂ ಚಿತ್ರವಿಲ್ಲ", treatment: "ಚಿಕಿತ್ಸೆ", uploadToSee: "ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಲು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ", prevention: "ತಡೆಗಟ್ಟುವಿಕೆ",
+    heroTitle: "AI ನೊಂದಿಗೆ ದಾಳಿಂಬೆ ರೋಗಗಳನ್ನು ಪತ್ತೆ ಮಾಡಿ", heroSubtitle: "ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ನಿಮ್ಮ ಕ್ಯಾಮೆರಾ ಬಳಸಿ. ತ್ವರಿತ ರೋಗನಿರ್ಣಯ, ಚಿಕಿತ್ಸೆ ಮತ್ತು ತಡೆಗಟ್ಟುವಿಕೆ ಸಲಹೆಗಳು ಮತ್ತು ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ.",
+    uploadBtn: "ಚಿತ್ರ ಅಪ್ಲೋಡ್ ಮಾಡಿ", cameraBtn: "ಕ್ಯಾಮೆರಾ ತೆರೆಯಿರಿ", detectBtn: "ರೋಗ ಪತ್ತೆ ಮಾಡಿ", resetBtn: "ಬೇರೆ ಚಿತ್ರ ಅಪ್ಲೋడ్ ಮಾಡಿ",
+    resultsCardTitle: "ವಿಶ್ಲೇಷಣೆ ಫಲಿತಾಂಶಗಳು", noImage: "ಇನ್ನೂ ಚಿತ್ರವಿಲ್ಲ", treatment: "ಚಿಕಿತ್ಸೆ", uploadToSee: "ಶಿಫਾਰಸುಗಳನ್ನು ಪಡೆಯಲು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ", prevention: "ತಡೆಗಟ್ಟುವಿಕೆ",
     askBtn: "ಸಹಾಯಕರನ್ನು ಕೇಳಿ", playBtn: "ಪ್ಲೇ ಮಾಡಿ",
-    soilCardTitle: "ಮಣ್ಣಿನ ಆರೋಗ್ಯ ವಿಶ್ಲೇಷಣೆ", phLabel: "pH ಮಟ್ಟ", phTooltip: "pH < 6 : ಆಮ್ಲೀಯ. 6–7.5 : ಸೂಕ್ತ. > 8 : ಕ್ಷಾರೀಯ.",
+    soilCardTitle: "ಮಣ್ಣಿನ ಆರೋಗ್ಯ ವಿಶ್ಲೇಷಣೆ", phLabel: "pH ಮಟ್ಟ", phTooltip: "pH < 6 : ಆಮ್ಲೀಯ. 6–7.5 : ಸೂಕ್ತ. > 8 : ಕ್ಷਾਰೀಯ.",
     nLabel: "N (ppm)", pLabel: "P (ppm)", kLabel: "K (ppm)", analyzeBtn: "ಮಣ್ಣು ವಿಶ್ಲೇಷಿಸಿ",
-    cropCardTitle: "ಬೆಳೆ ಶಿಫಾರಸು", cropCardSubtitle: "ಬೆಳೆ ಶಿಫಾರಸು ಪಡೆಯಲು ಪರಿಸರ ಡೇಟಾವನ್ನು ನಮೂದಿಸಿ.", recommendBtn: "ಶಿಫಾರಸು ಮಾಡಿ",
-    irrigationTitle: "ನೀರಾವರಿ ಯೋಜಕ", irrigationSubtitle: "ಪ್ರಸ್ತುತ ಪರಿಸ್ಥಿತಿಗಳ ಆಧಾರದ ಮೇಲೆ ನೀರುಣಿಸುವ ಸಲಹೆ ಪಡೆಯಿರಿ.",
-    moistureLabel: "ಮಣ್ಣಿನ ತೇವಾಂಶ (%)", liveWeatherTitle: "ಲೈವ್ ಹವಾಮಾನ", fetchWeatherBtn: "ಪಡೆಯಿರಿ",
+    cropCardTitle: "ಬೆಳೆ ಶಿಫಾರಸು", cropCardSubtitle: "ಬೆಳೆ ಶಿఫਾਰಸು ಪಡೆಯಲು ಪರಿಸರ ಡೇਟಾವನ್ನು ನಮೂదಿಸಿ.", recommendBtn: "ಶಿఫಾರಸು ಮಾಡಿ",
+    irrigationTitle: "ನೀರಾವರಿ ಯೋಜಕ", irrigationSubtitle: "ಪ್ರಸ್ತುਤ ಪರಿಸ್ਥಿತಿಗಳ ಆಧಾರದ ಮೇಲೆ ನೀರುಣಿಸುವ ಸಲಹೆ ಪಡೆಯಿರಿ.",
+    moistureLabel: "ಮಣ್ಣಿನ ತೇವಾಂશ (%)", liveWeatherTitle: "ಲೈವ್ ಹವಾಮಾನ", fetchWeatherBtn: "ಪಡೆಯಿರಿ",
     noWeather: "'ಪಡೆಯಿರಿ' ಕ್ಲಿಕ್ ಮಾಡಿ", rainLabelShort: "ಮಳೆ ಮುನ್ಸೂಚನೆ (ಮುಂದಿನ 24 ಗಂಟೆಗಳು ಮಿಮೀ)",
     weatherNote: "ನಿಮ್ಮ ಸ್ಥಳಕ್ಕಾಗಿ ಲೈವ್ ಮಳೆ ಮುನ್ಸೂಚನೆಯನ್ನು ಪಡೆಯಲು 'ಪಡೆಯಿರಿ' ಕ್ಲಿಕ್ ಮಾಡಿ.",
-    adviceBtn: "ಸಲಹೆ ಪಡೆಯಿರಿ", irrigationAdviceTitle: "ನೀರಾವರಿ ಸಲಹೆ", noAdvice: "ಇನ್ನೂ ಸಲಹೆ ಇಲ್ಲ",
+    adviceBtn: "ಸలಹೆ ಪಡೆಯಿರಿ", irrigationAdviceTitle: "ನೀರಾವರಿ ಸಲಹೆ", noAdvice: "ಇನ್ನೂ ಸಲಹೆ ಇಲ್ಲ",
     assistantTitle: "AI ಸಹಾಯಕ", assistantWelcome: "ನಮಸ್ಕಾರ 👋। ರೋಗವನ್ನು ಪತ್ತೆ ಮಾಡಿ ಅಥವಾ ಮಣ್ಣು, ನೀರಾವರಿ, ಅಥವಾ ರಸಗೊಬ್ಬರಗಳ ಬಗ್ಗೆ ಪ್ರಶ್ನೆ ಕೇಳಿ.",
     chatPlaceholder: "ಚಿಕಿತ್ಸೆ, ಡೋಸೇಜ್, ಅಥವಾ ರಸಗೊಬ್ಬರಗಳ ಬಗ್ಗೆ ಕೇಳಿ...", sendBtn: "ಕಳುಹಿಸಿ",
     footer: "© ಅಗ್ರಿಸ್ಮಾರ್ಟ್ AI — ರೈತರಿಗಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ"
   }
 };
-// END OF TRANSLATIONS
+/* ===================== END TRANSLATIONS ===================== */
 
-const langLabel = { en: 'English', hi: 'हिंदी', kn: 'ಕನ್ನಡ', ta: 'தமிழ்', te: 'తెలుగు' };
+
+// language labels (single source, 9 languages)
+const langLabel = { en: 'English', hi: 'हिंदी', mr: 'मराठी', gu: 'ગુજરાતી', pa: 'ਪੰਜਾਬੀ', bn: 'বাংলা', ta: 'தமிழ்', te: 'తెలుగు', kn: 'ಕನ್ನಡ' };
+
 
 // !!! ADD YOUR API KEY HERE !!!
 const OPENWEATHER_API_KEY = 'YOUR_API_KEY_GOES_HERE';
@@ -105,6 +187,7 @@ const OPENWEATHER_API_KEY = 'YOUR_API_KEY_GOES_HERE';
 /**
  * -------------------------------------------------
  * Main Application Module
+ * (Using the version that calls the /tts backend)
  * -------------------------------------------------
  */
 const App = {
@@ -143,7 +226,9 @@ const App = {
       const langKey = btn.getAttribute('data-key');
       let text = original || defaultText;
       if (!text && langKey) {
-        text = translations[App.state.currentLang][langKey] || 'Submit';
+        // Find the translation, falling back to English if the key is missing in the current lang
+        const t = translations[App.state.currentLang] || translations.en;
+        text = t[langKey] || translations.en[langKey] || 'Submit';
       }
       btn.innerHTML = text || 'Submit';
     },
@@ -166,27 +251,34 @@ const App = {
     set: (lang) => {
       if (!translations[lang]) lang = 'en';
       App.state.currentLang = lang;
-      const t = translations[lang];
+      const t = translations[lang] || translations.en; // Fallback to 'en' if lang exists but is partial
 
       document.querySelectorAll('[data-key]').forEach(el => {
         const key = el.getAttribute('data-key');
         if (!key) return;
         const val = t[key];
-        if (val === undefined) return;
-        if ((el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') && 'placeholder' in el) {
-          el.placeholder = val;
+        
+        if (val === undefined) {
+            // Fallback for missing keys in older translations (mr, gu, pa, bn)
+            const fallbackVal = translations['en'][key];
+            if (fallbackVal === undefined) return;
+            if ((el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') && 'placeholder' in el) {
+                el.placeholder = fallbackVal;
+            } else {
+                el.innerText = fallbackVal;
+            }
         } else {
-          el.innerText = val;
+             if ((el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') && 'placeholder' in el) {
+                el.placeholder = val;
+            } else {
+                el.innerText = val;
+            }
         }
       });
 
-      // --- START OF FIXES ---
-      
-      // CHANGED ID to match index.html
       const lbl = App.el('currentLangLabel'); 
       if (lbl) lbl.innerText = langLabel[lang] || 'English';
 
-      // ADDED logic to update the 'active' class on the correct button
       document.querySelectorAll('.lang-opt').forEach(btn => {
         if (btn.getAttribute('data-lang') === lang) {
           btn.classList.add('active');
@@ -195,8 +287,6 @@ const App = {
         }
       });
       
-      // --- END OF FIXES ---
-
       App.lang.save(lang);
       App.lang.updateTreatmentPrevention(lang);
 
@@ -226,15 +316,39 @@ const App = {
   // --- NAVIGATION ---
   nav: {
     showPage: (pageId) => {
-      document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+        // This is the function from the *first* script, which seems to be what you had in index.html
+        // It's slightly different from the second script's nav, but will work
+      const current = document.querySelector('.page-section.active-section');
+      const next = App.el(pageId);
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       
-      const sec = App.el(pageId); 
-      if (sec) sec.style.display = 'block';
-      
-      const map = { detect: 'navDetect', soil: 'navSoil', crop: 'navCrop', irrigation: 'navIrrigation', assistant: 'navAssistant' };
-      const btn = App.el(map[pageId]); 
-      if (btn) btn.classList.add('active');
+      // Re-target the nav button key to match the nav button ID
+      const btn = App.el(`nav${pageId.charAt(0).toUpperCase() + pageId.slice(1)}`);
+      if(btn) btn.classList.add('active');
+
+      if (current && current.id !== pageId) {
+          current.style.opacity = '0';
+          current.style.transform = 'translateY(-10px)';
+          setTimeout(() => {
+              current.classList.remove('active-section');
+              current.style.display = 'none';
+              if(next) {
+                  next.style.display = 'block';
+                  void next.offsetWidth;
+                  next.classList.add('active-section');
+                  next.style.opacity = '1';
+                  next.style.transform = 'translateY(0)';
+              }
+               window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+      } else if (!current && next) {
+           next.style.display = 'block';
+           next.classList.add('active-section');
+           setTimeout(() => {
+               next.style.opacity = '1';
+               next.style.transform = 'translateY(0)';
+           }, 10);
+      }
     }
   },
 
@@ -308,9 +422,14 @@ const App = {
     },
 
     // --- Text-to-Speech (TTS) ---
+    // This is the version that calls the backend /tts endpoint
     speakText: async (text, lang, btn) => {
       if (!text) return;
-      if (btn) btn.disabled = true;
+      if (btn) {
+        btn.disabled = true;
+        btn.dataset.originalHtml = btn.innerHTML; // Store original content
+        btn.innerHTML = '🔊 Playing...'; // Show loading state
+      }
       
       try {
         // 1. Try backend TTS
@@ -323,7 +442,12 @@ const App = {
         if (j && j.audio_url) {
           const a = new Audio(j.audio_url); 
           a.play();
-          a.onended = () => { if (btn) btn.disabled = false; };
+          a.onended = () => { 
+            if (btn) {
+                btn.disabled = false; 
+                btn.innerHTML = btn.dataset.originalHtml; // Restore original content
+            }
+          };
           return; // Success
         }
       } catch (e) {
@@ -333,13 +457,21 @@ const App = {
       // 2. Fallback to browser's SpeechSynthesis
       if ('speechSynthesis' in window) {
         const ut = new SpeechSynthesisUtterance(text);
-        const map = { en:'en-US', hi:'hi-IN', ta:'ta-IN', te:'te-IN', kn:'kn-IN' };
+        const map = { en:'en-US', hi:'hi-IN', ta:'ta-IN', te:'te-IN', kn:'kn-IN', mr: 'mr-IN', gu: 'gu-IN', pa: 'pa-IN', bn: 'bn-IN' };
         ut.lang = map[lang] || 'en-US';
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(ut);
-        ut.onend = () => { if (btn) btn.disabled = false; };
+        ut.onend = () => { 
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.originalHtml; // Restore original content
+            }
+        };
       } else {
-        if (btn) btn.disabled = false; // No fallback available
+        if (btn) {
+            btn.disabled = false; // No fallback available
+            btn.innerHTML = btn.dataset.originalHtml; // Restore original content
+        }
       }
     },
 
@@ -388,7 +520,7 @@ const App = {
         };
       }
       
-      const map = { en: 'en-IN', hi: 'hi-IN', ta: 'ta-IN', te: 'te-IN', kn: 'kn-IN' };
+      const map = { en: 'en-IN', hi: 'hi-IN', ta: 'ta-IN', te: 'te-IN', kn: 'kn-IN', mr: 'mr-IN', gu: 'gu-IN', pa: 'pa-IN', bn: 'bn-IN' };
       App.state.speechRecognition.lang = map[App.state.currentLang] || 'en-IN';
       App.state.speechRecognition.start();
     },
@@ -556,16 +688,11 @@ const App = {
       }
     },
 
-    // === NEW WEATHER FUNCTION ===
-    // === UPDATED WEATHER FUNCTION ===
     fetchWeather: async () => {
-      // API key check is no longer needed, as it's handled by the proxy
-      
       const btn = App.el('fetchWeatherBtn');
       App.util.showLoading(btn, 'Fetching...');
 
       try {
-        // 1. Get User's Location
         const position = await new Promise((resolve, reject) => {
           if (!navigator.geolocation) {
             reject(new Error('Geolocation is not supported by your browser.'));
@@ -575,19 +702,15 @@ const App = {
 
         const { latitude: lat, longitude: lon } = position.coords;
 
-        // 2. Fetch Weather Data (using your new proxy endpoint)
         const r = await fetch(`/weather/forecast?lat=${lat}&lon=${lon}&mode=onecall`);
         if (!r.ok) throw new Error('Weather API proxy error');
         const data = await r.json();
 
-        // 3. Process the "One Call" API Data
         const currentWeather = data.current;
         if (!currentWeather) throw new Error("Invalid weather data received.");
 
-        // Calculate total rain for the next 24 hours from the 'hourly' array
         let totalRain = 0;
         if (data.hourly) {
-          // Sum the rain for the next 24 hours (hourly[0] is the current hour)
           for (let i = 0; i < 24 && i < data.hourly.length; i++) {
             if (data.hourly[i].rain && data.hourly[i].rain['1h']) {
               totalRain += data.hourly[i].rain['1h'];
@@ -595,30 +718,31 @@ const App = {
           }
         }
         
-        // 4. Update the UI
         const weatherDiv = App.el('weatherDisplay');
         if (weatherDiv) weatherDiv.style.display = 'flex';
         
-        // Use 'currentWeather.temp' (One Call format)
         if(App.el('weatherTemp')) App.el('weatherTemp').innerText = `${Math.round(currentWeather.temp)}°C`;
         if(App.el('weatherDesc')) App.el('weatherDesc').innerText = currentWeather.weather[0].description;
         
-        // Update icon
         const iconCode = currentWeather.weather[0].icon;
         if(App.el('weatherIcon')) App.el('weatherIcon').src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
         
-        // Update the rain input field!
         if(App.el('recentRain')) App.el('recentRain').value = totalRain.toFixed(1);
 
       } catch (e) {
         console.error('Weather fetch error', e);
-        alert(`Could not fetch weather: ${e.message}`);
+        // Use mock data as fallback
+        alert(`Could not fetch weather: ${e.message}. Using mock data.`);
+        const mockTemp = Math.floor(Math.random() * (35 - 20) + 20);
+        const weatherDiv = App.el('weatherDisplay');
+        if (weatherDiv) weatherDiv.style.display = 'flex';
+        if(App.el('weatherTemp')) App.el('weatherTemp').innerText = `${mockTemp}°C`;
+        if(App.el('weatherDesc')) App.el('weatherDesc').innerText = "Mostly Sunny (Mock)";
+        if(App.el('recentRain')) App.el('recentRain').value = "0.0";
       } finally {
         App.util.hideLoading(btn);
       }
     },
-    // === END OF UPDATED FUNCTION ===
-    // === END OF NEW FUNCTION ===
 
     sendChat: async () => {
       const qInput = App.el('userQ');
@@ -729,32 +853,25 @@ const App = {
     on('navIrrigation', 'click', () => App.nav.showPage('irrigation'));
     on('navAssistant', 'click', () => App.nav.showPage('assistant'));
 
-    // --- START OF FIXES for Language Pickers ---
-    // CHANGED ID from 'langBtn' to 'langToggle'
+    // Language picker
     on('langToggle', 'click', (e) => {
         e.stopPropagation();
-        // CHANGED logic to toggle 'active' class on the parent, matching style.css
         App.el('langDropdown')?.classList.toggle('active');
     });
 
-    // CHANGED class from '.lang-option' to '.lang-opt'
     document.querySelectorAll('.lang-opt').forEach(el => {
       el.addEventListener('click', () => {
         App.lang.set(el.getAttribute('data-lang'));
-        // CHANGED logic to remove 'active' class from parent
         App.el('langDropdown')?.classList.remove('active');
       });
     });
 
-    // UPDATED click-outside logic to work with the new structure
     document.addEventListener('click', (e) => {
         const menu = App.el('langDropdown');
-        // If the click is outside the dropdown, close it
         if (menu && !menu.contains(e.target)) {
             menu.classList.remove('active');
         }
     });
-    // --- END OF FIXES for Language Pickers ---
 
     // STT/TTS
     on('micBtn', 'click', App.media.toggleMic);
@@ -819,6 +936,11 @@ const App = {
     sync('crop_N','slider_crop_N'); sync('crop_P','slider_crop_P'); sync('crop_K','slider_crop_K');
     sync('crop_pH','slider_crop_pH'); sync('crop_temp','slider_crop_temp');
     sync('crop_humidity','slider_crop_humidity'); sync('crop_rainfall','slider_crop_rainfall');
+
+    // Add this line to fix the "No image yet" text on load
+    App.media.restorePreviewArea();
+    // Add this to fix the nav buttons on load
+    App.nav.showPage('detect');
   }
 };
 
