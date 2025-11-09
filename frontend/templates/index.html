@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Pomegranate Farm — AgriSmart AI</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <img src="/static/icons/logo.svg" alt="logo" class="logo" />
+        <h1 data-key="title">AgriSmart AI</h1>
+      </div>
+      <nav class="nav">
+        <button id="navDetect" class="nav-btn active" data-key="navDetect">Disease Detection</button>
+        <button id="navSoil" class="nav-btn" data-key="navSoil">Soil Analysis</button>
+        <button id="navCrop" class="nav-btn" data-key="navCrop">Crop Recommendation</button>
+        <button id="navIrrigation" class="nav-btn" data-key="navIrrigation">Irrigation</button>
+        <button id="navAssistant" class="nav-btn" data-key="navAssistant">Assistant</button>
+      </nav>
+      <div class="actions">
+        
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-toggle" id="langToggle" title="Change Language">
+            <span class="lang-icon">🌐</span>
+            <span id="currentLangLabel">English</span>
+          </button>
+          <div class="lang-menu" id="langMenu">
+             <button data-lang="en" class="lang-opt active"><span>English</span><span class="native">EN</span></button>
+             <button data-lang="hi" class="lang-opt"><span>Hindi</span><span class="native">हिंदी</span></button>
+             <button data-lang="te" class="lang-opt"><span>Telugu</span><span class="native">తెలుగు</span></button>
+             <button data-lang="kn" class="lang-opt"><span>Kannada</span><span class="native">ಕನ್ನಡ</span></button>
+             <button data-lang="ta" class="lang-opt"><span>Tamil</span><span class="native">தமிழ்</span></button>
+          </div>
+        </div>
+        <button id="micBtn" class="icon-btn" title="Start voice">🎙️</button>
+        <button id="playBtn" class="icon-btn" title="Play response">🔊</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="detect" class="page-section">
+      <div class="hero">
+        <div class="hero-left">
+          <h2 data-key="heroTitle">Detect Pomegranate Diseases with AI</h2>
+          <p data-key="heroSubtitle">Upload a photo or use your camera. Get instant diagnosis, treatment & prevention tips and voice guidance.</p>
+          <div class="hero-cta">
+            <label class="btn-primary" for="imgFile" data-key="uploadBtn">Upload Image</label>
+            <button id="openCamera" class="btn-outline" data-key="cameraBtn">Open Camera</button>
+          </div>
+        </div>
+        <div class="hero-right">
+          <img src="/static/images/hero-pom.png" alt="hero" />
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="card">
+          <h3 data-key="uploadCardTitle">Upload Crop Image</h3>
+          <div class="preview" id="previewArea">
+            <img id="previewImg" src="/static/images/placeholder.png" alt="preview" />
+          </div>
+
+          <div class="controls">
+            <input id="imgFile" type="file" accept="image/*" style="display:none" />
+            <button id="btnUpload" class="btn-primary" data-key="detectBtn">Detect Disease</button>
+            <button id="btnReset" class="btn-link" data-key="resetBtn">Upload Different Image</button>
+          </div>
+        </div>
+
+        <div class="card results">
+          <h3 data-key="resultsCardTitle">Analysis Results</h3>
+          <div id="resultBox" class="result-box">
+            <div class="result-head">
+              <h4 id="rLabel" data-key="noImage">No image yet</h4>
+              <span id="severityBadge" class="badge">—</span>
+            </div>
+
+            <div class="progress-line">
+              <div id="confBar" class="bar" style="width:0%"></div>
+              <div class="bar-label"><span id="rConf">0%</span></div>
+            </div>
+
+            <div id="treatmentWrap" class="text-block">
+              <h5 data-key="treatment">Treatment</h5>
+              <ul id="treatmentList"><li data-key="uploadToSee">Upload an image to get recommendations</li></ul>
+              <h5 data-key="prevention">Prevention</h5>
+              <ul id="preventionList"><li>—</li></ul>
+            </div>
+
+            <div class="result-actions">
+              <button id="btnAsk" class="btn-primary" data-key="askBtn">Ask Assistant</button>
+              <button id="btnSpeak" class="btn-outline" data-key="playBtn">Play TTS</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="soil" class="page-section" style="display:none;">
+      <div class="panel-grid small-gap">
+        <div class="card">
+          <h3 data-key="soilCardTitle">Soil Health Analysis</h3>
+
+          <div class="form-row">
+            <label data-key="phLabel">pH Level
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="phTooltip">pH &lt; 6 : acidic. 6–7.5 : optimal. &gt; 8 : alkaline.</div>
+            </label>
+            <input id="soil_pH" type="number" step="0.1" min="3" max="10" value="6.5" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="nLabel">N (ppm)</label>
+            <input id="soil_N" type="number" value="60" min="0" max="200" />
+            <input id="slider_N" type="range" value="60" min="0" max="200" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="pLabel">P (ppm)</label>
+            <input id="soil_P" type="number" value="35" min="0" max="100" />
+            <input id="slider_P" type="range" value="35" min="0" max="100" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="kLabel">K (ppm)</label>
+            <input id="soil_K" type="number" value="45" min="0" max="100" />
+            <input id="slider_K" type="range" value="45" min="0" max="100" />
+          </div>
+
+          <button id="soilAnalyze" class="btn-primary" data-key="analyzeBtn">Analyze Soil</button>
+        </div>
+
+        <div class="card">
+          <h3 data-key="soilResultsTitle">Soil Analysis Results</h3>
+          <div id="soilResult" class="soil-result">
+            <div class="status" data-key="noAnalysis">No analysis yet</div>
+            <ul id="soilRecs"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="crop" class="page-section" style="display:none;">
+      <div class="panel-grid small-gap">
+        <div class="card">
+          <h3 data-key="cropCardTitle">Crop Recommendation</h3>
+          <p class="card-subtitle" data-key="cropCardSubtitle">Enter environmental data to get a crop recommendation.</p>
+
+          <div class="form-row slider-group">
+            <label data-key="nLabel">N (ppm)
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="nTooltip">Nitrogen (N) level in soil (parts per million).</div>
+            </label>
+            <input id="crop_N" type="number" value="90" min="0" max="200" />
+            <input id="slider_crop_N" type="range" value="90" min="0" max="200" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="pLabel">P (ppm)
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="pTooltip">Phosphorous (P) level in soil (parts per million).</div>
+            </label>
+            <input id="crop_P" type="number" value="40" min="0" max="100" />
+            <input id="slider_crop_P" type="range" value="40" min="0" max="100" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="kLabel">K (ppm)
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="kTooltip">Potassium (K) level in soil (parts per million).</div>
+            </label>
+            <input id="crop_K" type="number" value="40" min="0" max="100" />
+            <input id="slider_crop_K" type="range" value="40" min="0" max="100" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="phLabel">pH
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="phTooltip">Soil pH level (0-14).</div>
+            </label>
+            <input id="crop_pH" type="number" value="6.5" step="0.1" min="3" max="10" />
+            <input id="slider_crop_pH" type="range" value="6.5" step="0.1" min="3" max="10" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="tempLabel">Temp (°C)
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="tempTooltip">Average temperature in Celsius.</div>
+            </label>
+            <input id="crop_temp" type="number" value="25" min="0" max="50" />
+            <input id="slider_crop_temp" type="range" value="25" min="0" max="50" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="humidityLabel">Humidity (%)
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="humidityTooltip">Relative humidity percentage.</div>
+            </label>
+            <input id="crop_humidity" type="number" value="60" min="0" max="100" />
+            <input id="slider_crop_humidity" type="range" value="60" min="0" max="100" />
+          </div>
+
+          <div class="form-row slider-group">
+            <label data-key="rainLabel">Rain (mm)
+              <span class="hint">ⓘ</span>
+              <div class="tooltip" data-key="rainTooltip">Average rainfall in millimeters.</div>
+            </label>
+            <input id="crop_rainfall" type="number" value="100" min="0" max="300" />
+            <input id="slider_crop_rainfall" type="range" value="100" min="0" max="300" />
+          </div>
+
+          <button id="cropAnalyzeBtn" class="btn-primary" data-key="recommendBtn">Recommend Crop</button>
+        </div>
+
+        <div class="card">
+          <h3 data-key="cropResultTitle">Recommended Crop</h3>
+          <div id="cropResult" class="crop-result-box">
+            <img src="/static/images/crops/placeholder.png" alt="crop" id="cropResultImg" />
+            <h2 id="cropResultLabel" data-key="noAnalysis">No analysis yet</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="irrigation" class="page-section" style="display:none;">
+      <div class="panel-grid small-gap">
+        
+        <div class="card">
+          <h3 data-key="irrigationTitle">Irrigation Planner</h3>
+          <p class="card-subtitle" data-key="irrigationSubtitle">Get watering advice based on current conditions.</p>
+          
+          <label data-key="moistureLabel">Soil Moisture (%)</label>
+          <input id="soilMoisture" type="number" value="25" min="0" max="100" />
+          
+          <hr class="form-divider"> <div class="form-row split">
+            <h4 data-key="liveWeatherTitle">Live Weather</h4>
+            <button id="fetchWeatherBtn" class="btn-outline" data-key="fetchWeatherBtn">Fetch</button>
+          </div>
+
+          <div id="weatherDisplay" class="weather-info" style="display: none;"> <img id="weatherIcon" src="/static/icons/weather/unknown.png" alt="weather icon">
+            <div class="weather-details">
+              <div id="weatherTemp">--°C</div>
+              <div id="weatherDesc" data-key="noWeather">Click 'Fetch'</div>
+            </div>
+          </div>
+
+          <label data-key="rainLabelShort">Forecasted Rain (next 24h in mm)</label>
+          <input id="recentRain" type="number" value="0" min="0" step="0.1" />
+          <p class="form-note" data-key="weatherNote"></n>Click 'Fetch' to get live rain forecast for your location.</p>
+          <button id="irrigateBtn" class="btn-primary" data-key="adviceBtn">Get Advice</button>
+        </div>
+        
+        <div class="card">
+          <h3 data-key="irrigationAdviceTitle">Irrigation Advice</h3>
+          <div id="irrigationAdvice" class="irrigation-advice-text" data-key="noAdvice">No advice yet</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="assistant" class="page-section" style="display:none;">
+      <div class="card wide">
+        <h3 data-key="assistantTitle">AI Assistant</h3>
+        <div class="assistant-area">
+          <div class="chat-window" id="chatWindow">
+            <div class="chat-msg bot" data-key="assistantWelcome">Hi 👋. Detect a disease or ask a question about soil, irrigation, or fertilizers.</div>
+          </div>
+          <div class="chat-controls">
+            <input id="userQ" placeholder="Ask about treatment, dosage, or fertilizers..." data-key="chatPlaceholder" />
+            <button id="sendQ" class="btn-primary" data-key="sendBtn">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container" data-key="footer">© AgriSmart AI — Built for farmers</div>
+    </footer>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
