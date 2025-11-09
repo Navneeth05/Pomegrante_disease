@@ -1,11 +1,12 @@
 # backend/app.py
 import os, json, tempfile, subprocess
-import requests
+import requests  # <-- FIX: Moved import to top
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 from PIL import Image
 from openai import OpenAI
+from pathlib import Path
 
 # --- Import your project's other files ---
 from src.infer import load_model, predict_pil_image
@@ -15,18 +16,20 @@ from src.irrigation import recommend_timing
 from src.tts_stt import translate_text, tts   # we'll implement stt locally below
 
 # ------------------ ENV & OpenAI ------------------
-# ------------------ ENV & OpenAI ------------------
-from pathlib import Path
-from dotenv import load_dotenv
-from openai import OpenAI
+BASE_DIR = Path(__file__).resolve().parent  # backend/
+DATA_FILE = BASE_DIR / "data" / "disease_info.json"
+
+with open(DATA_FILE, "r", encoding="utf-8") as f:
+    DISEASE_INFO = json.load(f)
 
 # Always load .env from project root (one level up from backend/)
-BASE_DIR = Path(__file__).resolve().parent.parent
-dotenv_path = BASE_DIR / ".env"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+dotenv_path = PROJECT_ROOT / ".env"
 load_dotenv(dotenv_path=dotenv_path)
 
-OPENAI_API_KEY = os.getenv("OPENAI_sk-proj-t4V3QV8fIY3MNWjDA6pnXoe0_Si0pnI6ryrER6jCwld7QqsobdAHuMxlXO7dEPfLcxZvX4xmuJT3BlbkFJDdn5n2XLUf-r1lxijhaphx5MzA6mVFEBtdGaMBFencxydEd1OHPnMciZQCaDZKf8_Mk2ZgUIAAAPI_KEY")
-OPENWEATHER_API_KEY = os.getenv("0b3b780602a22e62c0a3cc295bfd2acf")
+# --- FIX: Load keys by their VARIABLE NAME, not the key itself ---
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY") # <-- FIX
 
 # Print diagnostic info
 if OPENWEATHER_API_KEY:
@@ -42,7 +45,7 @@ else:
 # Initialize OpenAI client safely
 client = None
 try:
-    client = OpenAI(api_key=OPENAI_API_KEY)  # ✅ pass key explicitly
+    client = OpenAI(api_key=OPENAI_API_KEY)
     client.models.list()  # simple validation
     print("✅ OpenAI client initialized successfully.")
 except Exception as e:
@@ -51,6 +54,7 @@ except Exception as e:
 
 
 # ------------------ Flask app ------------------
+# --- FIX: Define the app ONLY ONCE ---
 app = Flask(__name__, template_folder="../frontend/templates", static_folder="../frontend/static")
 CORS(app)
 
@@ -151,7 +155,19 @@ def predict():
     img = Image.open(request.files["file"].stream)
     idx, prob, _ = predict_pil_image(model, tf, device, img)
     label = CLASSES[idx]
-    return jsonify({"label": label, "confidence": prob})
+    lang = request.args.get("lang", "en")
+
+    key = label.strip().lower()
+    info = DISEASE_INFO.get(key, {}).get(lang, DISEASE_INFO.get(key, {}).get("en", {}))
+
+    return jsonify({
+        "label": label,
+        "confidence": prob,
+        "treatment": info.get("treatment", ["—"]),
+        "prevention": info.get("prevention", ["—"])
+    })
+
+
 
 @app.route("/soil/recommend", methods=["POST"])
 def soil_recommend():
@@ -201,6 +217,29 @@ def stt_route():
             return jsonify({"text": "", "error": f"stt_failed: {e}"}), 500
     return jsonify({"text": text})
 
+@app.route("/disease_info", methods=["GET"])
+def disease_info_route():
+    # query args: ?label=<label>&lang=<en|hi|ta|te|kn>
+    label = request.args.get("label", "").strip().lower()
+    lang = request.args.get("lang", "en")
+    if not label:
+        return jsonify({"treatment": ["—"], "prevention": ["—"]})
+    info = DISEASE_INFO.get(label, {})
+    if not info:
+        # fallback: try fuzzy/substring match
+        for k in DISEASE_INFO.keys():
+            if k in label or label in k:
+                info = DISEASE_INFO[k]
+                break
+    if not info:
+        return jsonify({"treatment": ["—"], "prevention": ["—"]})
+    # pick requested lang, else English
+    res = info.get(lang, info.get("en", {}))
+    return jsonify({
+        "treatment": res.get("treatment", ["—"]),
+        "prevention": res.get("prevention", ["—"])
+    })
+
 @app.route("/irrigation/advice", methods=["POST"])
 def irrigation_advice():
     data = request.get_json(force=True)
@@ -209,7 +248,38 @@ def irrigation_advice():
     advice = recommend_timing(moisture, rain)
     return jsonify({"advice": advice})
 
+# --- FIX: Merged this route into the main app ---
+@app.route('/weather/forecast')
+def weather_forecast():
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    mode = request.args.get('mode', 'forecast')  # 'forecast' or 'onecall'
+    
+    if not lat or not lon:
+        return jsonify({'error': 'lat & lon required'}), 400
+    
+    # --- FIX: Check the global API key variable ---
+    if not OPENWEATHER_API_KEY:
+        print("❌ Weather request failed: OPENWEATHER_API_KEY is not set.")
+        return jsonify({'error': 'Weather service is not configured'}), 500
+
+    try:
+        if mode == 'onecall':
+            url = 'https://api.openweathermap.org/data/2.5/onecall'
+            params = {'lat': lat, 'lon': lon, 'exclude': 'minutely', 'units': 'metric', 'appid': OPENWEATHER_API_KEY}
+        else:
+            url = 'https://api.openweathermap.org/data/2.5/forecast'
+            params = {'lat': lat, 'lon': lon, 'units': 'metric', 'appid': OPENWEATHER_API_KEY}
+
+        resp = requests.get(url, params=params, timeout=10)
+        resp.raise_for_status()
+        return jsonify(resp.json())
+    except requests.RequestException as e:
+        print(f"Weather API request error: {e}")
+        return jsonify({'error': str(e)}), 502
+
 # ------------------ Run ------------------
 if __name__ == "__main__":
     # Flask dev server
+    # --- FIX: This will now run the correct, single 'app' ---
     app.run(host="0.0.0.0", port=5000, debug=True)
