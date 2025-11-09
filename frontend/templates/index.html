@@ -230,19 +230,37 @@
 
     <section id="irrigation" class="page-section" style="display:none;">
       <div class="panel-grid small-gap">
+        
         <div class="card">
           <h3 data-key="irrigationTitle">Irrigation Planner</h3>
           <p class="card-subtitle" data-key="irrigationSubtitle">Get watering advice based on current conditions.</p>
+          
           <label data-key="moistureLabel">Soil Moisture (%)</label>
           <input id="soilMoisture" type="number" value="25" min="0" max="100" />
-          <label data-key="rainLabelShort">Recent Rain (mm)</label>
-          <input id="recentRain" type="number" value="0" min="0" />
+          
+          <hr class="form-divider"> <div class="form-row split">
+            <h4 data-key="liveWeatherTitle">Live Weather</h4>
+            <button id="fetchWeatherBtn" class="btn-outline" data-key="fetchWeatherBtn">Fetch</button>
+          </div>
+
+          <div id="weatherDisplay" class="weather-info" style="display: none;"> <img id="weatherIcon" src="/static/icons/weather/unknown.png" alt="weather icon">
+            <div class="weather-details">
+              <div id="weatherTemp">--°C</div>
+              <div id="weatherDesc" data-key="noWeather">Click 'Fetch'</div>
+            </div>
+          </div>
+
+          <label data-key="rainLabelShort">Forecasted Rain (next 24h in mm)</label>
+          <input id="recentRain" type="number" value="0" min="0" step="0.1" />
+          <p class="form-note" data-key="weatherNote">Click 'Fetch' to get live rain forecast for your location.</p>
           <button id="irrigateBtn" class="btn-primary" data-key="adviceBtn">Get Advice</button>
         </div>
+        
         <div class="card">
           <h3 data-key="irrigationAdviceTitle">Irrigation Advice</h3>
           <div id="irrigationAdvice" class="irrigation-advice-text" data-key="noAdvice">No advice yet</div>
         </div>
+
       </div>
     </section>
 
