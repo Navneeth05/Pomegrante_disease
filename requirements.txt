@@ -1,0 +1,35 @@
+flask
+flask-cors
+python-dotenv
+torch
+torchvision
+timm
+openai
+numpy
+pandas
+scikit-learn
+Pillow
+tqdm
+librosa       # for audio if needed
+deep-translator
+gTTS
+SpeechRecognition
+pydub
+openai
+sounddevice   # for local STT capture during dev (optional)
+faster-whisper
+whisper  # optional for STT
+onnxruntime   # optional for optimized serving
+google-generativeai
+requests
+fastapi
+uvicorn
+torch
+torchvision
+gradio
+Pillow
+fastapi
+uvicorn
+python-multipart
+# (plus whatever you use)
+openai-whisper    # or faster-whisper
